@@ -1,27 +1,33 @@
 package com.dominio.juego_vida_conway;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import com.dominio.juego_vida_conway.utilidades.Archivo;
+import static com.dominio.juego_vida_conway.utilidades.Matriz.*;
 
 public class Mundo{
 	
-	private Célula[][] células;
+	private final Célula[][] células;
 	
-	private Mundo(final Célula[][] mundoDeCélulas){		
-		this.células = Objects.requireNonNull(mundoDeCélulas);		
+	public enum Célula {
+		Muerta ,  
+		Viva;
 	}
 	
-	/**
-	 * Por defecto el mundo de Conway se llena con células muertas y tiene un tamaño minimo de 3 x 3**/
+	private Mundo(final Célula[][] células){		
+		this.células = Objects.requireNonNull(células);		
+	}
+	
+	//Por defecto el mundo de Conway se llena con células muertas y tiene un tamaño minimo de 3 x 3
 	private Mundo(final int m, final int n){
 		this(new Célula[m][n]);
 		llenoDe(Célula.Muerta);
 	}
 	
-	//fabricas estaticas	
+	//fábricas estáticas	
 	public static Mundo de(final int m, final int n){
 		if(m < 3 ||  n < 3) throw new IllegalArgumentException("El mundo de Conway debe ser al menos de 3 x 3");
 		return new Mundo(m , n);
@@ -30,37 +36,108 @@ public class Mundo{
 	public static Mundo desdeArchivo(File archivoInicioJuego){
 		return Archivo.leerMundo(archivoInicioJuego);		
 	}
+	/**
+	 * 
+	 * @return Archivo de inicio de juego desde ubicacion por defecto
+	 */
+	public static Mundo desdeArchivo(){
+		return Archivo.leerMundo();		
+	}
 	//
-	
-	private Mundo llenoDe(Célula estadoCélulas){
-		for (int columna = 0; columna < células.length ; columna++) {
-			for (int fila = 0; fila < células[columna].length ; fila++) {
-				células[columna][fila] = estadoCélulas; 
-			}		
-		}
-		return new Mundo(células); 
-	} 
-	
-	public Mundo conCélulaVivaEn(int x, int y){
-		if(x > células.length || x < 0 || y > células[0].length || y < 0) throw new IllegalArgumentException("Esta poniendo por células por fuera del mundo");
-		células[x][y] = Célula.Viva;				 
+	public Mundo conCélulaVivaEn(int coordenadaColumna, int coordenadaFila){
+		if(coordenadaColumna >= númeroColumnas() || coordenadaColumna < 0 || coordenadaFila >= númeroFilas() || coordenadaFila < 0) throw new IllegalArgumentException("Esta poniendo por células por fuera del mundo");
+		células[coordenadaColumna][coordenadaFila] = Célula.Viva;				 
 		return new Mundo(células); 
 	}
 	
+	private Mundo llenoDe(final Célula estadoCélulas){
+		return new Mundo(llenarConEstado(this.células, estadoCélulas));
+	} 
+	
+	private int númeroColumnas(){
+		return células.length;
+	}
+	
+	private int númeroFilas(){
+		return células[0].length;
+	}
+	
+	/**
+	 * 
+	 * @return una matriz agrandada en uno para simplificar la aplicacion de las reglas de calculo de la siguiente generación
+	 */
+	private Célula[][] arregloDeTrabajo(){
+		return llenarConEstado(new Célula[númeroColumnas() + 2][númeroFilas() + 2],Célula.Muerta);
+	}
+	
+	public Mundo nuevaGeneracion(){
+		Célula[][] generaciónActual = arregloDeTrabajo();//generación cero
+		Célula[][] generaciónSiguiente = arregloDeTrabajo();//siguiente generación
+		
+		//llenar el arreglo de trabajo con lo del usuario	
+		
+		generaciónActual = copiar(generaciónActual,this.células,this.células, new Delta(1,1),new Delta(0,0));
+		
+		//calcular siguiente generación
+		int númeroVecinasVivas = 0;
+		for (int fila = 1; fila < númeroFilas() + 1; fila++) {
+			for (int columna = 1; columna < númeroColumnas() + 1 ; columna++) {	
+				
+				númeroVecinasVivas = generaciónActual[columna - 1][fila - 1].ordinal() + generaciónActual[columna][fila - 1].ordinal() + generaciónActual[columna + 1][fila - 1].ordinal() +
+						generaciónActual[columna - 1][fila].ordinal() + generaciónActual[columna + 1][fila].ordinal() +
+							generaciónActual[columna - 1][fila + 1].ordinal() + generaciónActual[columna][fila + 1].ordinal() + generaciónActual[columna + 1][fila + 1].ordinal();
+				
+				//asignar la siguiente generación basado en las reglas de la actual
+				generaciónSiguiente[columna][fila] = generaciónActual[columna][fila];	
+				if(númeroVecinasVivas == 3) generaciónSiguiente [columna][fila] = Célula.Viva;
+				if(númeroVecinasVivas < 2 || númeroVecinasVivas > 3) generaciónSiguiente [columna][fila] = Célula.Muerta;
+				
+			}
+			
+		}
+		
+		//crea un nuevo mundo con la ultima generación calculada
+		return new Mundo(copiar(this.células, generaciónSiguiente,this.células,new Delta(0,0),new Delta(1,1)));
+		
+	}
+		
 	private static final char SALTO_DE_LÍNEA = '\n';
 	private static final char CARÁCTER_CÉLULA_MUERTA = '.';
 	private static final char CARÁCTER_CÉLULA_VIVA = '*';
 	
 	public String toString(){		
 		StringBuilder sb = new StringBuilder();
-		for (int j = 0; j < células.length ; ++j) {
-			for (int i = 0; i < células[j].length ; ++i) {
-				if(células[i][j] == Célula.Muerta) sb.append(CARÁCTER_CÉLULA_MUERTA);
-				if(células[i][j] == Célula.Viva) sb.append(CARÁCTER_CÉLULA_VIVA);
+		for (int filas = 0; filas < númeroFilas() ; ++filas) {
+			for (int columnas = 0; columnas < númeroColumnas() ; ++columnas) {
+				if(células[columnas][filas] == Célula.Muerta) sb.append(CARÁCTER_CÉLULA_MUERTA);
+				if(células[columnas][filas] == Célula.Viva) sb.append(CARÁCTER_CÉLULA_VIVA);
 			}
 			sb.append(SALTO_DE_LÍNEA);	
 		}
 		return sb.toString();		
-	}	
+	}
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Mundo otro = (Mundo) obj;
+		if (!Arrays.deepEquals(células, otro.células))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int primo = 31;
+		int resultado = 1;
+		resultado = primo * resultado + Arrays.deepHashCode(células);
+		return resultado;
+	}
 	
 }
