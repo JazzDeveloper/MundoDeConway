@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.dominio.juego_vida_conway.Mundo;
+import com.dominio.juego_vida_conway.jugar.Mundo;
 
 public final class Archivo {
 	

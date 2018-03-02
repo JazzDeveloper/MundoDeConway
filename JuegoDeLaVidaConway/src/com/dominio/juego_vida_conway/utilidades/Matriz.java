@@ -2,12 +2,14 @@ package com.dominio.juego_vida_conway.utilidades;
 
 import java.util.List;
 
-import com.dominio.juego_vida_conway.Mundo;
-import com.dominio.juego_vida_conway.Delta;
-import com.dominio.juego_vida_conway.Mundo.Célula;
+import com.dominio.juego_vida_conway.jugar.Coordenada;
+import com.dominio.juego_vida_conway.jugar.Delta;
+import com.dominio.juego_vida_conway.jugar.Mundo;
+import com.dominio.juego_vida_conway.jugar.Mundo.Célula;
 
 public final class Matriz {
 	
+	private static final int NÚMERO_CONSTANTES_JUEGO = 3;//m,n,g
 	private static final int CONSTANTE_ASCII = 48;
 	private static final char CARÁCTER_CÉLULA_VIVA = '*';
 
@@ -17,7 +19,7 @@ public final class Matriz {
 	
 	public static int[] cadenaDeCarácteresAArregloInt(final String string){
 		int[] arregloInt = new int[3];	
-		for(int carácter = 0; carácter < 3; carácter++){
+		for(int carácter = 0; carácter < NÚMERO_CONSTANTES_JUEGO; carácter++){
 			arregloInt[carácter] =  string.charAt(carácter) - CONSTANTE_ASCII;
 		}		
 		return arregloInt;		
@@ -26,7 +28,8 @@ public final class Matriz {
 	public static Mundo llenarMundoConCélulas(List<String> list, Mundo mundo){	
 		for(int línea = 1; línea < list.size() ; ++línea){
 			for (int columna = 0; columna < list.get(línea).length() ; ++columna) {
-				if(list.get(línea).charAt(columna) == CARÁCTER_CÉLULA_VIVA) mundo.conCélulaVivaEn(columna , línea - 1);
+				if(list.get(línea).charAt(columna) == CARÁCTER_CÉLULA_VIVA) mundo.conCélulaVivaEn(new Coordenada(columna, línea - 1));
+				
 			}
 		}		
 		return mundo;	
@@ -48,6 +51,15 @@ public final class Matriz {
 			}
 		}
 		return destino;
+	}
+	
+	public static int calcularVecinasVivas(Célula[][] generaciónActual, int fila, int columna) {
+		int númeroVecinasVivas = 0;				
+		final Delta máscara[] = {new Delta(-1,-1), new Delta(-1,0), new Delta(-1,1), new Delta(0,-1),new Delta(0,1),new Delta(1,-1),new Delta(1,0),new Delta(1,1)};		
+		for (int i = 0; i < 8; ++i) {
+			númeroVecinasVivas += generaciónActual[columna - máscara[i].dx()][fila - máscara[i].dy()].ordinal();
+		}		
+		return númeroVecinasVivas;
 	}
 	
 }

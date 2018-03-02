@@ -1,8 +1,7 @@
-package com.dominio.juego_vida_conway;
+package com.dominio.juego_vida_conway.jugar;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import com.dominio.juego_vida_conway.utilidades.Archivo;
@@ -43,10 +42,11 @@ public class Mundo{
 	public static Mundo desdeArchivo(){
 		return Archivo.leerMundo();		
 	}
-	//
-	public Mundo conCélulaVivaEn(int coordenadaColumna, int coordenadaFila){
-		if(coordenadaColumna >= númeroColumnas() || coordenadaColumna < 0 || coordenadaFila >= númeroFilas() || coordenadaFila < 0) throw new IllegalArgumentException("Esta poniendo por células por fuera del mundo");
-		células[coordenadaColumna][coordenadaFila] = Célula.Viva;				 
+
+	
+	public Mundo conCélulaVivaEn(Coordenada coordenada){
+		if(coordenada.x() >= númeroColumnas() || coordenada.x() < 0 || coordenada.y() >= númeroFilas() || coordenada.y() < 0) throw new IllegalArgumentException("Esta poniendo por células por fuera del mundo");
+		células[coordenada.x()][coordenada.y()] = Célula.Viva;				 
 		return new Mundo(células); 
 	}
 	
@@ -71,34 +71,22 @@ public class Mundo{
 	}
 	
 	public Mundo nuevaGeneracion(){
-		Célula[][] generaciónActual = arregloDeTrabajo();//generación cero
-		Célula[][] generaciónSiguiente = arregloDeTrabajo();//siguiente generación
-		
-		//llenar el arreglo de trabajo con lo del usuario	
+		Célula[][] generaciónActual = arregloDeTrabajo();
+		Célula[][] generaciónSiguiente = arregloDeTrabajo();
 		
 		generaciónActual = copiar(generaciónActual,this.células,this.células, new Delta(1,1),new Delta(0,0));
 		
-		//calcular siguiente generación
 		int númeroVecinasVivas = 0;
-		for (int fila = 1; fila < númeroFilas() + 1; fila++) {
-			for (int columna = 1; columna < númeroColumnas() + 1 ; columna++) {	
-				
-				númeroVecinasVivas = generaciónActual[columna - 1][fila - 1].ordinal() + generaciónActual[columna][fila - 1].ordinal() + generaciónActual[columna + 1][fila - 1].ordinal() +
-						generaciónActual[columna - 1][fila].ordinal() + generaciónActual[columna + 1][fila].ordinal() +
-							generaciónActual[columna - 1][fila + 1].ordinal() + generaciónActual[columna][fila + 1].ordinal() + generaciónActual[columna + 1][fila + 1].ordinal();
-				
-				//asignar la siguiente generación basado en las reglas de la actual
+		for (int fila = 1; fila < númeroFilas() + 1; ++fila) {
+			for (int columna = 1; columna < númeroColumnas() + 1 ; ++columna) {					
+				númeroVecinasVivas = calcularVecinasVivas(generaciónActual, fila, columna);				
 				generaciónSiguiente[columna][fila] = generaciónActual[columna][fila];	
-				if(númeroVecinasVivas == 3) generaciónSiguiente [columna][fila] = Célula.Viva;
-				if(númeroVecinasVivas < 2 || númeroVecinasVivas > 3) generaciónSiguiente [columna][fila] = Célula.Muerta;
-				
+				if(númeroVecinasVivas == 3) generaciónSiguiente[columna][fila] = Célula.Viva;
+				if(númeroVecinasVivas < 2 || númeroVecinasVivas > 3) generaciónSiguiente [columna][fila] = Célula.Muerta;				
 			}
 			
-		}
-		
-		//crea un nuevo mundo con la ultima generación calculada
-		return new Mundo(copiar(this.células, generaciónSiguiente,this.células,new Delta(0,0),new Delta(1,1)));
-		
+		}		
+		return new Mundo(copiar(this.células, generaciónSiguiente,this.células,new Delta(0,0),new Delta(1,1)));		
 	}
 		
 	private static final char SALTO_DE_LÍNEA = '\n';
