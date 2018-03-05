@@ -18,24 +18,15 @@ public final class Archivo {
 	private Archivo(){
 		throw new AssertionError("Esta es una clase utilitaria");
 	}
-	
-	/**
-	 * 
-	 * @return lee el mundo desde el archivo de inicio de juego en la ubicación por defecto(resources/iniciar_juego.txt)
-	 */
+	 
 	public static Mundo leerMundo(){
 		return leerMundo(archivoInicioJuego());
 	}
 	
-	/**
-	 * 
-	 * @return lee el número de generaciones desde el archivo de inicio de juego en la ubicación por defecto(resources/iniciar_juego.txt)
-	 */
 	public static int leerNúmeroGeneraciones(){
 		return leerConstantesDelJuego(2);
 	}
 	
-	//el cliente pasa la ubicación del archivo
 	public static Mundo leerMundo(final File archivoInicioJuego){
 		if(!Archivo.existe(archivoInicioJuego) ) throw new IllegalArgumentException("Error en la lectura del archivo, pueda que no exista o no tenga el formato adecuado");			
 		
@@ -46,7 +37,6 @@ public final class Archivo {
 		return llenarMundoConCélulas(datosInicioJuego(archivoInicioJuego), mundo);
 	}
 	
-	//el cliente pasa la ubicación del archivo
 	public static int leerNúmeroGeneraciones(final File archivoInicioJuego){
 		return leerConstantesDelJuego(2);
 	}

@@ -38,10 +38,7 @@ public class Mundo{
 	public static Mundo desdeArchivo(File archivoInicioJuego){
 		return Archivo.leerMundo(archivoInicioJuego);		
 	}
-	/**
-	 * 
-	 * @return Archivo de inicio de juego desde ubicacion por defecto
-	 */	
+
 	public static Mundo desdeArchivo(){
 		return Archivo.leerMundo();		
 	}
