@@ -85,7 +85,7 @@ public class Mundo{
 
 	/**
 	 * 
-	 * @return una matriz agrandada en uno para simplificar la aplicacion de las reglas de calculo de la siguiente generación e inicializada(con células muertas)
+	 * @return una matriz agrandada en 2 para simplificar la aplicacion de las reglas de calculo de la siguiente generación e inicializada(con células muertas)
 	 */
 	private Célula[][] arregloDeTrabajo(){
 		return inicializar(new Célula[númeroColumnas() + 2][númeroFilas() + 2]);
