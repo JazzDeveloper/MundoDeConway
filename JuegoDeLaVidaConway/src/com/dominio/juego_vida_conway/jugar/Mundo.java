@@ -51,11 +51,6 @@ public class Mundo{
 	public Mundo conCélulaMuertaEn(Coordenada coordenada){				 
 		return con(coordenada, Célula.Muerta);
 	}
-
-	//..
-	private Célula[][] obtenerCélulas(){
-		return this.células;
-	}
 	
 	public String nuevaGeneración(){
 		Célula[][] generaciónActualDeTrabajo = crearGeneraciónActualDeTrabajo(arregloDeTrabajo());		
@@ -64,7 +59,12 @@ public class Mundo{
 		return asignarMundoSiguienteDeTrabajoAGeneraciónActual(mundoSiguienteDeTrabajo.obtenerCélulas()).toString();
 	}
 	
+
 	//..
+	private Célula[][] obtenerCélulas(){
+		return this.células;
+	}
+	
 	private Mundo con(Coordenada coordenada, Célula estado){
 		if(coordenada.x() >= númeroColumnas() || coordenada.x() < 0 || coordenada.y() >= númeroFilas() || coordenada.y() < 0) throw new IllegalArgumentException("Esta poniendo por células por fuera del mundo");
 		células[coordenada.x()][coordenada.y()] = estado;
