@@ -23,9 +23,6 @@ public class Juego{
 		this(Mundo.desdeArchivo(archivoDatosJuego), Archivo.leerNúmeroGeneraciones(archivoDatosJuego));
 	}
 	
-	/***
-	 * Crea juego con archivo de inicio en ubicacion por defecto (resources/iniciar_juego.txt)
-	 */
 	public Juego() {
 		this(Mundo.desdeArchivo(), Archivo.leerNúmeroGeneraciones(new File(Archivo.RUTA_DE_ARCHIVO_INICIO_JUEGO)));
 	}
