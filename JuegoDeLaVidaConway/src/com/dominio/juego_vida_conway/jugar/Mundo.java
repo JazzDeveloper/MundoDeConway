@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import com.dominio.juego_vida_conway.utilidades.Archivo;
-import static com.dominio.juego_vida_conway.utilidades.Matriz.*;
+import static com.dominio.juego_vida_conway.utilidades.Operaciones.*;
 
 public class Mundo{
 	
 	private final Célula[][] células;
+	public static final char SALTO_DE_LÍNEA = '\n';
+	public static final char CARÁCTER_CÉLULA_MUERTA = '.';
+	public static final char CARÁCTER_CÉLULA_VIVA = '*';
 	
 	public enum Célula {
 		Muerta ,  
@@ -27,9 +30,9 @@ public class Mundo{
 	}
 	
 	//fábricas estáticas	
-	public static Mundo de(final int m, final int n){
-		if(m < 3 ||  n < 3) throw new IllegalArgumentException("El mundo de Conway debe ser al menos de 3 x 3");
-		return new Mundo(m , n);
+	public static Mundo de(final int númeroFilas, final int númeroColumnas){
+		if(númeroFilas < 3 ||  númeroColumnas < 3) throw new IllegalArgumentException("El mundo de Conway debe ser al menos de 3 x 3");
+		return new Mundo(númeroFilas , númeroColumnas);
 	}
 
 	public static Mundo desdeArchivo(File archivoInicioJuego){
@@ -38,20 +41,41 @@ public class Mundo{
 	/**
 	 * 
 	 * @return Archivo de inicio de juego desde ubicacion por defecto
-	 */
+	 */	
 	public static Mundo desdeArchivo(){
 		return Archivo.leerMundo();		
 	}
-
+	//fin fábricas
 	
 	public Mundo conCélulaVivaEn(Coordenada coordenada){
+		return con(coordenada, Célula.Viva);
+	}
+	
+	public Mundo conCélulaMuertaEn(Coordenada coordenada){				 
+		return con(coordenada, Célula.Muerta);
+	}
+
+	//..
+	private Célula[][] obtenerCélulas(){
+		return this.células;
+	}
+	
+	public String nuevaGeneración(){
+		Célula[][] generaciónActualDeTrabajo = crearGeneraciónActualDeTrabajo(arregloDeTrabajo());		
+		Mundo mundoSiguienteDeTrabajo = new Mundo(calcularGeneraciónSiguienteDeTrabajo(generaciónActualDeTrabajo));
+		
+		return asignarMundoSiguienteDeTrabajoAGeneraciónActual(mundoSiguienteDeTrabajo.obtenerCélulas()).toString();
+	}
+	
+	//..
+	private Mundo con(Coordenada coordenada, Célula estado){
 		if(coordenada.x() >= númeroColumnas() || coordenada.x() < 0 || coordenada.y() >= númeroFilas() || coordenada.y() < 0) throw new IllegalArgumentException("Esta poniendo por células por fuera del mundo");
-		células[coordenada.x()][coordenada.y()] = Célula.Viva;				 
+		células[coordenada.x()][coordenada.y()] = estado;
 		return new Mundo(células); 
 	}
 	
 	private Mundo llenoDe(final Célula estadoCélulas){
-		return new Mundo(llenarConEstado(this.células, estadoCélulas));
+		return new Mundo(inicializar(this.células));
 	} 
 	
 	private int númeroColumnas(){
@@ -61,37 +85,22 @@ public class Mundo{
 	private int númeroFilas(){
 		return células[0].length;
 	}
-	
+
 	/**
 	 * 
-	 * @return una matriz agrandada en uno para simplificar la aplicacion de las reglas de calculo de la siguiente generación
+	 * @return una matriz agrandada en uno para simplificar la aplicacion de las reglas de calculo de la siguiente generación e inicializada(con células muertas)
 	 */
 	private Célula[][] arregloDeTrabajo(){
-		return llenarConEstado(new Célula[númeroColumnas() + 2][númeroFilas() + 2],Célula.Muerta);
+		return inicializar(new Célula[númeroColumnas() + 2][númeroFilas() + 2]);
+	}	
+
+	private Mundo asignarMundoSiguienteDeTrabajoAGeneraciónActual(Célula[][] generaciónSiguienteDeTrabajo) {
+		return new Mundo(copiar(this.células, generaciónSiguienteDeTrabajo, this.células, new Coordenada(0,0), new Coordenada(1,1)));		
 	}
 	
-	public Mundo nuevaGeneracion(){
-		Célula[][] generaciónActual = arregloDeTrabajo();
-		Célula[][] generaciónSiguiente = arregloDeTrabajo();
-		
-		generaciónActual = copiar(generaciónActual,this.células,this.células, new Delta(1,1),new Delta(0,0));
-		
-		int númeroVecinasVivas = 0;
-		for (int fila = 1; fila < númeroFilas() + 1; ++fila) {
-			for (int columna = 1; columna < númeroColumnas() + 1 ; ++columna) {					
-				númeroVecinasVivas = calcularVecinasVivas(generaciónActual, fila, columna);				
-				generaciónSiguiente[columna][fila] = generaciónActual[columna][fila];	
-				if(númeroVecinasVivas == 3) generaciónSiguiente[columna][fila] = Célula.Viva;
-				if(númeroVecinasVivas < 2 || númeroVecinasVivas > 3) generaciónSiguiente [columna][fila] = Célula.Muerta;				
-			}
-			
-		}		
-		return new Mundo(copiar(this.células, generaciónSiguiente,this.células,new Delta(0,0),new Delta(1,1)));		
+	private Célula[][] crearGeneraciónActualDeTrabajo(Célula[][] generaciónActualDeTrabajo) {
+		return copiar(generaciónActualDeTrabajo,this.células,this.células, new Coordenada(1,1),new Coordenada(0,0));
 	}
-		
-	private static final char SALTO_DE_LÍNEA = '\n';
-	private static final char CARÁCTER_CÉLULA_MUERTA = '.';
-	private static final char CARÁCTER_CÉLULA_VIVA = '*';
 	
 	public String toString(){		
 		StringBuilder sb = new StringBuilder();
