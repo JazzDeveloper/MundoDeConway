@@ -21,7 +21,7 @@ public final class Archivo {
 	 
 	public static Mundo leerMundo(){
 		return leerMundo(archivoInicioJuego());
-	}
+	} 
 	
 	public static int leerNúmeroGeneraciones(){
 		return leerConstantesDelJuego(2);

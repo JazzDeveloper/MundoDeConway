@@ -55,11 +55,9 @@ public class Mundo{
 	public String nuevaGeneración(){
 		Célula[][] generaciónActualDeTrabajo = crearGeneraciónActualDeTrabajo(arregloDeTrabajo());		
 		Mundo mundoSiguienteDeTrabajo = new Mundo(calcularGeneraciónSiguienteDeTrabajo(generaciónActualDeTrabajo));
-		
 		return asignarMundoSiguienteDeTrabajoAGeneraciónActual(mundoSiguienteDeTrabajo.obtenerCélulas()).toString();
 	}
 	
-
 	//..
 	private Célula[][] obtenerCélulas(){
 		return this.células;
@@ -101,17 +99,21 @@ public class Mundo{
 	
 	public String toString(){		
 		StringBuilder sb = new StringBuilder();
-		for (int filas = 0; filas < númeroFilas() ; ++filas) {
-			for (int columnas = 0; columnas < númeroColumnas() ; ++columnas) {
-				if(células[columnas][filas] == Célula.Muerta) sb.append(CARÁCTER_CÉLULA_MUERTA);
-				if(células[columnas][filas] == Célula.Viva) sb.append(CARÁCTER_CÉLULA_VIVA);
-			}
-			sb.append(SALTO_DE_LÍNEA);	
+		for (int fila = 0; fila < númeroFilas() ; ++fila) {
+			sb.append(leerCarácter(fila)).append(SALTO_DE_LÍNEA);	
 		}
 		return sb.toString();		
 	}
 	
-
+	private String leerCarácter(final int fila){
+		StringBuilder sb = new StringBuilder();
+		for (int columna = 0; columna < númeroColumnas() ; ++columna) {
+			if(células[columna][fila] == Célula.Muerta) sb.append(CARÁCTER_CÉLULA_MUERTA);
+			if(células[columna][fila] == Célula.Viva) sb.append(CARÁCTER_CÉLULA_VIVA);
+		}
+		return sb.toString();		
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

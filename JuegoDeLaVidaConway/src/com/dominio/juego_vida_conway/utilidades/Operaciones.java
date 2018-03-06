@@ -1,5 +1,7 @@
 package com.dominio.juego_vida_conway.utilidades;
 
+import java.util.Arrays;
+
 import com.dominio.juego_vida_conway.jugar.Coordenada;
 import com.dominio.juego_vida_conway.jugar.Mundo.Célula;
 
@@ -8,8 +10,8 @@ public final class Operaciones {
 	private static final int NÚMERO_CONSTANTES_JUEGO = 3;//número filas generación cero, número columnas generación cero, generaciones
 	private static final int CONSTANTE_ASCII = 48;
 	private static final Coordenada máscara[] = {new Coordenada(-1,-1), new Coordenada(-1,0), new Coordenada(-1,1), 
-			new Coordenada(0,-1), new Coordenada(0,1),
-				new Coordenada(1,-1), new Coordenada(1,0), new Coordenada(1,1)};		
+												 new Coordenada(0,-1),  					  new Coordenada(0,1),
+												 new Coordenada(1,-1),  new Coordenada(1,0),  new Coordenada(1,1)};		
 	
 	private Operaciones(){
 		throw new AssertionError("Esta es una clase utilitaria");
@@ -23,9 +25,9 @@ public final class Operaciones {
 		}		
 		return arregloInt;		
 	}
-	
+
 	public static Célula[][] inicializar(final Célula[][] células){
-		if(células == null) throw new IllegalArgumentException();  
+		if(células == null) throw new IllegalArgumentException();  				
 		for (int columna = 0; columna < células.length ; ++columna) {
 			for (int fila = 0; fila < células[columna].length ; ++fila) {
 				células[columna][fila] = Célula.Muerta; 
@@ -37,7 +39,6 @@ public final class Operaciones {
 	//ref: determina es el tamaño de la ventana que se va acopiar
 	public static Célula[][] copiar(final Célula[][] destino, final Célula[][] fuente, final Célula[][] ref, final Coordenada inicioDestino, final Coordenada inicioFuente){	
 		if(precondicionesFallan(destino, fuente, ref, inicioDestino, inicioFuente)) throw new IllegalArgumentException();
-		
 		for (int fila = 0; fila < ref[0].length; ++fila) {
 			for (int columna = 0; columna < ref.length ; ++columna) {
 				destino[columna + inicioDestino.x()][fila + inicioDestino.y()] = fuente[columna + inicioFuente.x()][fila + inicioFuente.y()];	
@@ -74,7 +75,7 @@ public final class Operaciones {
 	private static int calcularVecinasVivas(final Célula[][] generaciónActualDeTrabajo, final int fila, final int columna) {
 		if(generaciónActualDeTrabajo == null || fila >= generaciónActualDeTrabajo.length || fila < 0 || columna < 0) throw new IllegalArgumentException();  		
 		int númeroVecinasVivas = 0;				
-		for (int i = 0; i < 8; ++i) {
+		for (int i = 0; i < máscara.length; ++i) {
 			númeroVecinasVivas += generaciónActualDeTrabajo[columna - máscara[i].x()][fila - máscara[i].y()].ordinal();
 		}		
 		return númeroVecinasVivas;
@@ -83,14 +84,19 @@ public final class Operaciones {
 	private static boolean precondicionesFallan(final Célula[][] destino, final Célula[][] fuente, final Célula[][] ref,
 															final Coordenada inicioDestino, final Coordenada inicioFuente) {
 		
-				return destino == null || fuente == null || ref == null || inicioFuente == null || inicioDestino == null || 
+				return precondicionesReferenciaNoNulas(destino, fuente, ref, inicioDestino, inicioFuente) || 
 							precondicionesCoordenadas(fuente, inicioFuente) || precondicionesCoordenadas(destino, inicioDestino) ||
-							precondicionesVentana(destino, fuente, ref, inicioDestino, inicioFuente); 
+								precondicionesVentana(destino, fuente, ref, inicioDestino, inicioFuente); 
+	}
+
+	private static boolean precondicionesReferenciaNoNulas(final Célula[][] destino, final Célula[][] fuente, final Célula[][] ref, 
+																final Coordenada inicioDestino, final Coordenada inicioFuente) {
+		return destino == null || fuente == null || ref == null || inicioFuente == null || inicioDestino == null;
 	}
 	
 	//asegura que la copia no salga de los limites de las matrices que se estan copiando
 	private static boolean precondicionesVentana(final Célula[][] destino, final Célula[][] fuente, final Célula[][] ref,
-			final Coordenada inicioDestino, final Coordenada inicioFuente) {
+														final Coordenada inicioDestino, final Coordenada inicioFuente) {
 		
 		return ref.length > (destino.length - inicioDestino.x()) || ref.length > (fuente.length - inicioFuente.x()) ||
 				ref[0].length > (destino[0].length - inicioDestino.y()) || ref[0].length > (fuente[0].length - inicioFuente.y());

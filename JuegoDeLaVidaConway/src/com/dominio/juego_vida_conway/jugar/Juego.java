@@ -17,7 +17,7 @@ public class Juego{
 		this.mundo = Objects.requireNonNull(mundo);	
 		mundos = new String[this.generaciones + 1];//el mundo inicial y los generados
 		mundos[0] = mundo.toString();					
-	}
+	} 
 
 	public Juego(final File archivoDatosJuego) {
 		this(Mundo.desdeArchivo(archivoDatosJuego), Archivo.leerNúmeroGeneraciones(archivoDatosJuego));

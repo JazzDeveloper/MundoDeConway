@@ -6,7 +6,7 @@ public class Coordenada {
 	
 	public Coordenada(final int x, final int y) {
 		this.x = x;
-		this.y = y;
+		this.y = y; 
 	}
 
 	public int x() {

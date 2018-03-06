@@ -13,7 +13,7 @@ public class MundoTest {
 		assertThat(Mundo.de(3, 3).toString(), is( "..." + Mundo.SALTO_DE_LÍNEA + 
 												  "..." + Mundo.SALTO_DE_LÍNEA +
 												  "..." + Mundo.SALTO_DE_LÍNEA));
-	}
+	} 
 	
 	@Test
 	public void unMundoConAlgunasCélulasVivasDeConwaySePuedeConstruirAPartirDelNúmeroDeFilasYColumnasYLasCoordenadasDeLasCélulasVivas() {
