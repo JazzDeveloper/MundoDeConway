@@ -97,7 +97,7 @@ public class JuegoTest {
 	
 	
 	@Test
-	public void laCuartaGeneraciónDeUnPlaneadorEsElMismoPlaneadorDesplazadoEnDosCélulasHaciaAbajoYHaciaLaDerecha() {
+	public void laCuartaGeneraciónDeUnPlaneadorEsElMismoPlaneadorDesplazadoEnUnaCélulasHaciaAbajoYUnaHaciaLaDerecha() {
 		
 		int generaciones = 4;
 		
