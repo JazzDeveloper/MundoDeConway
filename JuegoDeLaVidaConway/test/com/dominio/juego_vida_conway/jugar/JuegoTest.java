@@ -112,11 +112,11 @@ public class JuegoTest {
 		juego.jugar();
 		
 		Mundo planeadorDesplazado = Mundo.de(6, 6)
-								.conCélulaVivaEn(new Coordenada(1 + 1, 1 + 1))
-									.conCélulaVivaEn(new Coordenada(2 + 1, 2 + 1))
-										.conCélulaVivaEn(new Coordenada(0 + 1, 3 + 1))
-												.conCélulaVivaEn(new Coordenada(1 + 1, 3 + 1))
-													.conCélulaVivaEn(new Coordenada(2 + 1, 3 + 1));
+									.conCélulaVivaEn(new Coordenada(1 + 1, 1 + 1))
+										.conCélulaVivaEn(new Coordenada(2 + 1, 2 + 1))
+											.conCélulaVivaEn(new Coordenada(0 + 1, 3 + 1))
+													.conCélulaVivaEn(new Coordenada(1 + 1, 3 + 1))
+														.conCélulaVivaEn(new Coordenada(2 + 1, 3 + 1));
 						
 		assertThat(juego.verÚltimaGeneración(), is(planeadorDesplazado.toString()));
 	}
