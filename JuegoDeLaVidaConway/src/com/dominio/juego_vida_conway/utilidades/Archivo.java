@@ -66,7 +66,7 @@ public final class Archivo {
 	}
 	
 	private static boolean esFormatoAdecuado(final File archivoInicioJuego, final List<String> datosInicioJuego, final int númeroColumnas, final int númeroDeFilas){
-		return datosInicioJuego.size() >= MÍNIMO_NÚMERO_DE_FILAS_ARCHIVO ^ datosInicioJuego.size() - 1 == númeroDeFilas ^ datosInicioJuego.get(1).length() == númeroColumnas;
+		return datosInicioJuego.size() >= MÍNIMO_NÚMERO_DE_FILAS_ARCHIVO || datosInicioJuego.size() - 1 == númeroDeFilas || datosInicioJuego.get(1).length() == númeroColumnas;
 	}
 		
 	private static List<String> leer(final File archivo){//quienes lo llaman deben verificar tamaño lista
