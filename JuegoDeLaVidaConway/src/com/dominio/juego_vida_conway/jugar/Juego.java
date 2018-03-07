@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import com.dominio.juego_vida_conway.utilidades.Archivo;
 
-public class Juego{
+public final class Juego{
 	private final Mundo mundo; 
 	private final int generaciones;
 	private final String[] mundos;

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.dominio.juego_vida_conway.jugar.Mundo.Célula;
 
-public class MundoTest {
+public final class MundoTest {
 	
 	@Test
 	public void unMundoMuertoDeConwaySePuedeConstruirAPartirDelNúmeroDeFilasYColumnas() {		

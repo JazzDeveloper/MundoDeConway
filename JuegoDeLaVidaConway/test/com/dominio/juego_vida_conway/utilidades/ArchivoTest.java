@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.dominio.juego_vida_conway.jugar.Mundo;
 
-public class ArchivoTest {
+public final class ArchivoTest {
 	
 	//ubicación por defecto resources/iniciar_juego.txt
 	//@Test //: esta deshabilitado el test para que el usuario pueda modificar el archivo 

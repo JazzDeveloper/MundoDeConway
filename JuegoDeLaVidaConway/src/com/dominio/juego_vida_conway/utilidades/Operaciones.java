@@ -1,7 +1,5 @@
 package com.dominio.juego_vida_conway.utilidades;
 
-import java.util.Arrays;
-
 import com.dominio.juego_vida_conway.jugar.Coordenada;
 import com.dominio.juego_vida_conway.jugar.Mundo.Célula;
 

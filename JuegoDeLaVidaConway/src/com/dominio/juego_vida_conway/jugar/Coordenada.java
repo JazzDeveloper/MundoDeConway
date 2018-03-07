@@ -1,6 +1,6 @@
 package com.dominio.juego_vida_conway.jugar;
 
-public class Coordenada {
+public final class Coordenada {
 	private final int x;
 	private final int y;
 	

@@ -9,7 +9,7 @@ import com.dominio.juego_vida_conway.jugar.Mundo.Célula;
 
 import static com.dominio.juego_vida_conway.utilidades.Operaciones.*; 
 
-public class OperacionesTest {
+public final class OperacionesTest {
 
 	@Test
 	public void laCadenaDeCaráteresQuinientosCincuentaYTresEsUnArregloIntConMúmerosCincoCincoTres() {

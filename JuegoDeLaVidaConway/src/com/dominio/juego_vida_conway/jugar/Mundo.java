@@ -7,7 +7,7 @@ import java.util.Objects;
 import com.dominio.juego_vida_conway.utilidades.Archivo;
 import static com.dominio.juego_vida_conway.utilidades.Operaciones.*;
 
-public class Mundo{
+public final class Mundo{
 	
 	private final Célula[][] células;
 	public static final char SALTO_DE_LÍNEA = '\n';
