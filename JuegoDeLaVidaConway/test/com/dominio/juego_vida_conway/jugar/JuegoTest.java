@@ -9,11 +9,11 @@ public final class JuegoTest {
 	@Test
 	public void cualquiereGeneraciónSiguienteDeUnaTinaEsLaMismaTina() {
 		int generaciones = 5;
-		Mundo tina = Mundo.de(5, 5)
-						.conCélulaVivaEn(new Coordenada(2,1))
-							.conCélulaVivaEn(new Coordenada(1,2))
-								.conCélulaVivaEn(new Coordenada(3,2))
-									.conCélulaVivaEn(new Coordenada(2,3));
+		Mundo tina = new Mundo.Builder(5, 5)													
+											.conCélulaVivaEn(new Coordenada(2,1))
+		.conCélulaVivaEn(new Coordenada(1,2))									.conCélulaVivaEn(new Coordenada(3,2))
+											.conCélulaVivaEn(new Coordenada(2,3))
+											.build();
 		
 		Juego juego = new Juego(tina, generaciones);
 		juego.jugar();
@@ -28,10 +28,11 @@ public final class JuegoTest {
 	@Test
 	public void laGeneraciónSiguienteDeUnaLíneaHorizontalDeCélulasVivasImparEsLaMismaLíneaDeCélulasVivasVertical() {
 		int generaciones = 1;
-		Mundo mundo = Mundo.de(5, 5)
-						.conCélulaVivaEn(new Coordenada(1,2))
+		Mundo mundo = new Mundo.Builder(5, 5)
+							.conCélulaVivaEn(new Coordenada(1,2))
 							.conCélulaVivaEn(new Coordenada(2,2))
-								.conCélulaVivaEn(new Coordenada(3,2));
+							.conCélulaVivaEn(new Coordenada(3,2))
+							.build();
 		
 		Juego juego = new Juego(mundo, generaciones);
 		juego.jugar();
@@ -46,13 +47,12 @@ public final class JuegoTest {
 	@Test
 	public void laGeneraciónSiguienteDeUnFaroSonDosBloquesEnLaMismaPosiciónDelFaro() {
 		int generaciones = 1;
-		Mundo faro = Mundo.de(6, 6)
-						.conCélulaVivaEn(new Coordenada(1,1))
-							.conCélulaVivaEn(new Coordenada(2,1))
-								.conCélulaVivaEn(new Coordenada(1,2))
-										.conCélulaVivaEn(new Coordenada(4,3))
-											.conCélulaVivaEn(new Coordenada(3,4))
-												.conCélulaVivaEn(new Coordenada(4,4));
+		Mundo faro = new Mundo.Builder(6, 6)
+						.conCélulaVivaEn(new Coordenada(1,1)).conCélulaVivaEn(new Coordenada(2,1))
+						.conCélulaVivaEn(new Coordenada(1,2))
+																															 .conCélulaVivaEn(new Coordenada(4,3))
+																						.conCélulaVivaEn(new Coordenada(3,4)).conCélulaVivaEn(new Coordenada(4,4))
+																						.build();
 		
 		Juego juego = new Juego(faro, generaciones);
 		juego.jugar();
@@ -69,13 +69,10 @@ public final class JuegoTest {
 	public void laFrecuenciaDeOscilaciónDeUnSapoEsDos() {
 		int generaciones = 1;
 		
-		Mundo sapo = Mundo.de(6, 6)
-						.conCélulaVivaEn(new Coordenada(2,2))
-							.conCélulaVivaEn(new Coordenada(3,2))
-								.conCélulaVivaEn(new Coordenada(4,2))
-										.conCélulaVivaEn(new Coordenada(1,3))
-											.conCélulaVivaEn(new Coordenada(2,3))
-											.conCélulaVivaEn(new Coordenada(3,3));
+		Mundo sapo = new Mundo.Builder(6, 6)
+																		 .conCélulaVivaEn(new Coordenada(2,2)).conCélulaVivaEn(new Coordenada(3,2)).conCélulaVivaEn(new Coordenada(4,2))			
+									.conCélulaVivaEn(new Coordenada(1,3)).conCélulaVivaEn(new Coordenada(2,3)).conCélulaVivaEn(new Coordenada(3,3))
+									.build();
 		
 		Juego juego = new Juego(sapo, 2 * generaciones);
 		juego.jugar();
@@ -93,23 +90,21 @@ public final class JuegoTest {
 	public void laCuartaGeneraciónDeUnPlaneadorEsElMismoPlaneadorDesplazadoEnUnaCélulasHaciaAbajoYUnaHaciaLaDerecha() {
 		int generaciones = 4;
 		
-		Mundo planeador = Mundo.de(6, 6)
-							.conCélulaVivaEn(new Coordenada(1,1))
-								.conCélulaVivaEn(new Coordenada(2,2))
-									.conCélulaVivaEn(new Coordenada(0,3))
-											.conCélulaVivaEn(new Coordenada(1,3))
-												.conCélulaVivaEn(new Coordenada(2,3));
-			
+		Mundo planeador = new Mundo.Builder(6, 6)
+													 .conCélulaVivaEn(new Coordenada(1,1))
+													 									.conCélulaVivaEn(new Coordenada(2,2))
+				.conCélulaVivaEn(new Coordenada(0,3)).conCélulaVivaEn(new Coordenada(1,3)).conCélulaVivaEn(new Coordenada(2,3))
+				.build();
+					
 		Juego juego = new Juego(planeador, generaciones);
 		juego.jugar();
 		
-		Mundo planeadorDesplazado = Mundo.de(6, 6)
-										.conCélulaVivaEn(new Coordenada(1 + 1, 1 + 1))
-											.conCélulaVivaEn(new Coordenada(2 + 1, 2 + 1))
-												.conCélulaVivaEn(new Coordenada(0 + 1, 3 + 1))
-														.conCélulaVivaEn(new Coordenada(1 + 1, 3 + 1))
-															.conCélulaVivaEn(new Coordenada(2 + 1, 3 + 1));
-							
+		Mundo planeadorDesplazado = new Mundo.Builder(6, 6)
+													.conCélulaVivaEn(new Coordenada(1 + 1, 1 + 1))
+																						.conCélulaVivaEn(new Coordenada(2 + 1, 2 + 1))
+				.conCélulaVivaEn(new Coordenada(0 + 1, 3 + 1)).conCélulaVivaEn(new Coordenada(1 + 1, 3 + 1)).conCélulaVivaEn(new Coordenada(2 + 1, 3 + 1))
+				.build();
+			
 		assertThat(juego.verÚltimaGeneración(), is(planeadorDesplazado.toString()));
 	}
 

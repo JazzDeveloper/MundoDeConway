@@ -1,20 +1,20 @@
 package com.dominio.juego_vida_conway.jugar;
 
 public final class Coordenada {
-	private final int x;
-	private final int y;
+	private final int columna;
+	private final int fila;
 	
-	public Coordenada(final int x, final int y) {
-		this.x = x;
-		this.y = y; 
+	public Coordenada(final int columna, final int fila) {
+		this.columna = columna;
+		this.fila = fila; 
 	}
 
-	public int x() {
-		return this.x;
+	public int columna() {
+		return this.columna;
 	}
 
-	public int y() {
-		return this.y;
+	public int fila() {
+		return this.fila;
 	}
 
 }

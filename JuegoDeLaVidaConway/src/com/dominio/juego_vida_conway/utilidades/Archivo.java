@@ -9,11 +9,13 @@ import java.util.List;
 
 import com.dominio.juego_vida_conway.jugar.Coordenada;
 import com.dominio.juego_vida_conway.jugar.Mundo;
+import com.dominio.juego_vida_conway.jugar.Mundo.Célula;
 
 public final class Archivo {
 	
 	public static final String RUTA_DE_ARCHIVO_INICIO_JUEGO = "resources/iniciar_juego.txt";
 	private static final int MÍNIMO_NÚMERO_DE_FILAS_ARCHIVO = 4;
+	private static final int NÚMERO_CONSTANTES_JUEGO = 3;//número filas generación cero, número columnas generación cero, generaciones
 	
 	private Archivo(){
 		throw new AssertionError("Esta es una clase utilitaria");
@@ -31,10 +33,11 @@ public final class Archivo {
 		if(!Archivo.existe(archivoInicioJuego) ) throw new IllegalArgumentException("Error en la lectura del archivo, pueda que no exista o no tenga el formato adecuado");			
 		
 		final int númeroColumnas = leerNúmeroColumnas(archivoInicioJuego);
-		final int númeroFilas = leerNúmeroFilas(archivoInicioJuego);		
-		final Mundo mundo = verificarFormato(archivoInicioJuego, númeroColumnas, númeroFilas);
+		final int númeroFilas = leerNúmeroFilas(archivoInicioJuego);
 		
-		return llenarMundoConCélulas(datosInicioJuego(archivoInicioJuego), mundo);
+		final Mundo.Builder builder = verificarFormato(archivoInicioJuego, númeroColumnas, númeroFilas);
+		
+		return llenarMundoConCélulas(datosInicioJuego(archivoInicioJuego), builder);
 	}
 	
 	public static int leerNúmeroGeneraciones(final File archivoInicioJuego){
@@ -42,23 +45,23 @@ public final class Archivo {
 	}
 	
 	//..	
-	private static Mundo llenarMundoConCélulas(final List<String> list, final Mundo mundo){
+	private static Mundo llenarMundoConCélulas(final List<String> list, final Mundo.Builder builder){
 		for(int línea = 1; línea < list.size() ; ++línea){
-			for (int columna = 0; columna < list.get(línea).length() ; ++columna) {
-				if(list.get(línea).charAt(columna) == Mundo.CARÁCTER_CÉLULA_VIVA) mundo.conCélulaVivaEn(new Coordenada(columna, línea - 1));
-				else mundo.conCélulaMuertaEn(new Coordenada(columna, línea - 1));
+			for (int columna = 0; columna < list.get(línea).length() ; ++columna) {				
+				if(list.get(línea).charAt(columna) == Célula.VIVA.toString().charAt(0)) builder.conCélulaVivaEn(new Coordenada(columna, línea - 1));
+				else builder.conCélulaMuertaEn(new Coordenada(columna, línea - 1));
 			}
 		}		
-		return mundo;	
+		return builder.build();	
 	}
 	
 	private static int leerConstantesDelJuego(final int columnaConstante){
 		return leerConstantesDelJuego(archivoInicioJuego())[columnaConstante];
 	}
 	
-	private static Mundo verificarFormato(final File archivoInicioJuego, final int númeroColumnas, final int númeroFilas) {
+	private static Mundo.Builder verificarFormato(final File archivoInicioJuego, final int númeroColumnas, final int númeroFilas) {
 		if(!esFormatoAdecuado(archivoInicioJuego, datosInicioJuego(archivoInicioJuego), númeroColumnas, númeroFilas)) throw new IllegalArgumentException("Error en la lectura del archivo, pueda que no exista o no tenga el formato adecuado(revisa el múmero de filas y columnas)");		
-		return Mundo.de(númeroColumnas, númeroFilas);
+		return new Mundo.Builder(númeroColumnas, númeroFilas);				
 	}
 	
 	private static List<String> datosInicioJuego(final File archivoInicioJuego) {
@@ -98,11 +101,20 @@ public final class Archivo {
 	}
 	
 	private static int[] leerConstantesDelJuego(final File archivoInicioJuego){
-		return Operaciones.cadenaDeCarácteresAArregloInt(leerPrimeraLínea(archivoInicioJuego));
+		return cadenaDeCarácteresAArregloInt(leerPrimeraLínea(archivoInicioJuego));
 	}
 	
 	private static String leerPrimeraLínea(final File archivoInicioJuego){
 		return Archivo.leer(archivoInicioJuego).get(0);
+	}
+	
+	private static int[] cadenaDeCarácteresAArregloInt(final String string){
+		if(string.length() < NÚMERO_CONSTANTES_JUEGO) throw new IllegalArgumentException("Deben haber por lo menos 3 carácteres");  
+		int[] arregloInt = new int[NÚMERO_CONSTANTES_JUEGO];	
+		for(int carácter = 0; carácter < NÚMERO_CONSTANTES_JUEGO; carácter++){
+			arregloInt[carácter] =  string.charAt(carácter) - '0';
+		}		
+		return arregloInt;		
 	}
 				
 }
