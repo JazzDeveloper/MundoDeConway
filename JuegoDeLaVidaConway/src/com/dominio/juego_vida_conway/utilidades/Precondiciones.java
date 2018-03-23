@@ -8,7 +8,7 @@ public final class Precondiciones {
 	private Precondiciones(){
 		throw new AssertionError("Esta es una clase utilitaria");
 	}
-	
+	  
 	public static boolean precondicionesFallan(final Célula[][] destino, final Célula[][] fuente, final Célula[][] ref,
 															final Coordenada inicioDestino, final Coordenada inicioFuente) {
 
