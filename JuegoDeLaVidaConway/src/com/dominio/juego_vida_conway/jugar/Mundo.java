@@ -43,7 +43,7 @@ public final class Mundo{
 		private final Célula[][] células;
 		
 		//package-private para pruebas unitarias
-		public Builder(final Célula[][] células){
+		Builder(final Célula[][] células){
 			this.células = Objects.requireNonNull(células);	
 		}
 		
